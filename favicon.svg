@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .bg { fill: #0366d6; }
+    .fg { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #58a6ff; }
+      .fg { fill: #0d1117; }
+    }
+  </style>
+  <rect class="bg" width="64" height="64" rx="12"/>
+  <text class="fg" x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
+        font-family="-apple-system, Segoe UI, Roboto, sans-serif"
+        font-size="36" font-weight="700">T</text>
+</svg>

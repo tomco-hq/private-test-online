@@ -1,0 +1,217 @@
+/* home.css — long-scroll one-page home for TomCo.
+   Builds on style.css :root tokens (--bg, --fg, --muted, --accent,
+   --border). style.css must load first. */
+
+.home { overflow-x: hidden; }
+
+/* Anchor targets clear the sticky header instead of hiding under it. */
+html { scroll-behavior: smooth; }
+:target { scroll-margin-top: 4.5rem; }
+
+/* --- Sticky header -------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.7rem 1.25rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.site-header.scrolled { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1); }
+.brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: var(--fg);
+}
+.anchor-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+.anchor-nav a {
+  text-decoration: none;
+  color: var(--fg);
+  font-size: 0.95rem;
+}
+.anchor-nav a:hover { color: var(--accent); }
+
+/* --- Scroll reveal -------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.in-view { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .scroll-cue { animation: none; }
+}
+
+/* --- Hero ----------------------------------------------------------- */
+.home-hero {
+  min-height: calc(100vh - 3.4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.25rem;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--border) 100%);
+  position: relative;
+}
+.home-hero-inner { max-width: 620px; }
+.home-hero h1 {
+  font-size: clamp(2.6rem, 8vw, 4.4rem);
+  line-height: 1.05;
+  margin: 0 0 0.5rem;
+}
+.home-hero .tagline { font-size: 1.2rem; margin: 0 0 1rem; }
+.home-hero-lede {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin: 0 auto 1.75rem;
+  max-width: 32em;
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 1.25rem;
+  font-size: 1.5rem;
+  color: var(--muted);
+  animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* --- Shared block layout ------------------------------------------- */
+.home-block {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4rem 1.25rem;
+}
+.home-block h2 {
+  font-size: 1.9rem;
+  border: 0;
+  padding: 0;
+  margin: 0 0 0.5rem;
+}
+.home-block-intro { color: var(--muted); margin: 0 0 1.75rem; }
+.home-section-link { margin-top: 1.5rem; }
+
+/* --- CTA button ----------------------------------------------------- */
+.btn-cta {
+  font-size: 1.05rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(3, 102, 214, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(3, 102, 214, 0.38);
+  opacity: 1;
+}
+
+/* --- Accent strip (gallery) ---------------------------------------- */
+.accent-strip {
+  background: var(--accent);
+  color: #fff;
+  max-width: none;
+}
+.accent-strip > * { max-width: 880px; margin-left: auto; margin-right: auto; }
+.accent-strip .home-block-intro { color: rgba(255, 255, 255, 0.85); }
+.accent-strip a { color: #fff; }
+
+/* --- Gallery strip -------------------------------------------------- */
+.gallery-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+.gallery-strip img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* --- Video embed (about) ------------------------------------------- */
+.home-block .video-embed { margin-top: 1.5rem; }
+
+/* --- Offer strip ---------------------------------------------------- */
+.offer-strip {
+  text-align: center;
+  background: var(--border);
+  max-width: none;
+  border-radius: 0;
+}
+.offer-strip > * { max-width: 880px; margin-left: auto; margin-right: auto; }
+.offer-strip p { color: var(--muted); margin: 0.5rem auto 1.5rem; }
+
+/* --- Contact -------------------------------------------------------- */
+.elsewhere {
+  list-style: none;
+  padding: 0;
+  margin: 1.75rem 0 0;
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* --- Footer --------------------------------------------------------- */
+.home-footer {
+  padding: 3rem 1.25rem 2.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.footer-cols {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+.footer-col h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fg);
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li { margin: 0.4rem 0; }
+.footer-col a { color: var(--muted); text-decoration: none; }
+.footer-col a:hover { color: var(--accent); }
+.footer-copy {
+  max-width: 960px;
+  margin: 2.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+/* --- Mobile --------------------------------------------------------- */
+@media (max-width: 480px) {
+  .site-header { padding: 0.6rem 1rem; }
+  .anchor-nav { gap: 0.8rem; }
+  .anchor-nav a { font-size: 0.88rem; }
+  .home-hero { min-height: calc(100svh - 3.4rem); padding: 2.5rem 1.25rem; }
+  .home-block { padding: 3rem 1.25rem; }
+  .scroll-cue { display: none; }
+  .footer-cols { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}

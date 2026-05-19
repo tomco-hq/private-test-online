@@ -1,0 +1,252 @@
+/* offer.css — long-form sales landing page for the Sunrise Print.
+   Builds on style.css :root tokens (--bg, --fg, --muted, --accent, --border).
+   style.css must load first. */
+
+.offer-page { overflow-x: hidden; }
+
+/* --- Scroll-reveal -------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .scroll-cue { animation: none; }
+}
+
+/* --- Shared block layout ------------------------------------------- */
+.block {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem;
+}
+.block h2 {
+  font-size: 1.9rem;
+  border: 0;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.offer-body { padding-bottom: 6rem; }
+
+.accent-block {
+  background: var(--accent);
+  color: #fff;
+  max-width: none;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.accent-block > * { max-width: 760px; margin-left: auto; margin-right: auto; }
+.accent-block a { color: #fff; text-decoration: underline; }
+
+/* --- Hero ----------------------------------------------------------- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.25rem;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--border) 100%);
+  position: relative;
+}
+.hero-inner { max-width: 640px; }
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  line-height: 1.1;
+  margin: 0 0 1rem;
+}
+.lede {
+  font-size: 1.15rem;
+  color: var(--muted);
+  margin: 0 auto 1.75rem;
+  max-width: 30em;
+}
+.hero-media img {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  margin-bottom: 1.75rem;
+}
+.micro {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.75rem 0 0;
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 1.25rem;
+  font-size: 1.5rem;
+  color: var(--muted);
+  animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* --- CTA button ----------------------------------------------------- */
+.btn-cta {
+  font-size: 1.05rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(3, 102, 214, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(3, 102, 214, 0.38);
+  opacity: 1;
+}
+.accent-block .btn-cta { background: #fff; color: var(--accent); border-color: #fff; }
+
+/* --- Benefit grid --------------------------------------------------- */
+.benefit-grid,
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+.benefit-card,
+.testimonial {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+.benefit-card h3 { margin: 0 0 0.4rem; font-size: 1.1rem; }
+.benefit-card p,
+.testimonial p { color: var(--muted); margin: 0.35rem 0; }
+
+/* --- Testimonials --------------------------------------------------- */
+.stars { color: #f5a623; letter-spacing: 0.1em; margin: 0 0 0.4rem !important; }
+.who { font-weight: 600; color: var(--fg) !important; font-size: 0.9rem; }
+
+/* --- Offer card ----------------------------------------------------- */
+.offer-card-wrap { padding-top: 2rem; padding-bottom: 2rem; }
+.offer-card {
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg);
+}
+.offer-card h2 { margin-bottom: 0.5rem; }
+.price-line { margin: 0.5rem 0 1rem; }
+.price { font-size: 2.6rem; font-weight: 700; }
+.price-note { color: var(--muted); }
+.includes {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 1.25rem;
+  max-width: 24em;
+  text-align: left;
+}
+.includes li { padding: 0.3rem 0 0.3rem 1.6rem; position: relative; }
+.includes li::before {
+  content: "\2713";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+.countdown-label {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.countdown {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin: 0.2rem 0 1.25rem;
+}
+
+/* --- FAQ ------------------------------------------------------------ */
+.faq p { margin: 0.75rem 0; }
+
+/* --- Final CTA ------------------------------------------------------ */
+.final-cta { text-align: center; }
+.final-cta p { color: var(--muted); }
+
+/* --- Footer --------------------------------------------------------- */
+.offer-footer {
+  text-align: center;
+  padding: 2.5rem 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.offer-footer p { margin: 0.25rem 0; }
+
+/* --- Mobile: keep the hero CTA above the fold ---------------------- */
+/* On narrow screens the stacked hero (eyebrow + headline + lede + image)
+   pushes the button below the fold. Tighten spacing and shrink the image
+   so the primary CTA stays visible without scrolling. */
+@media (max-width: 480px) {
+  .hero {
+    min-height: 100svh;
+    padding: 1.5rem 1.25rem 2.5rem;
+    justify-content: flex-start;
+  }
+  .hero-inner { padding-top: 0.5rem; }
+  .eyebrow { font-size: 0.72rem; margin-bottom: 0.4rem; }
+  .hero h1 {
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+    margin-bottom: 0.6rem;
+  }
+  .lede {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .hero-media img {
+    max-width: 160px;
+    margin-bottom: 1rem;
+  }
+  .btn-cta { font-size: 1rem; padding: 0.75rem 1.3rem; }
+  .micro { font-size: 0.78rem; }
+  .scroll-cue { display: none; }
+}
+
+/* --- Sticky CTA bar ------------------------------------------------- */
+.sticky-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(110%);
+  transition: transform 0.3s ease;
+  z-index: 50;
+}
+.sticky-cta.visible { transform: translateY(0); }
+.sticky-text { font-weight: 600; }
+@media (prefers-reduced-motion: reduce) {
+  .sticky-cta { transition: none; }
+}
