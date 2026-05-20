@@ -21,6 +21,9 @@
 </head>
 <body class="home">
 
+  <!-- SHIPPING STRIP -------------------------------------------------- -->
+  <div class="shipping-strip">Free shipping on orders over $75.</div>
+
   <!-- STICKY HEADER --------------------------------------------------- -->
   <header class="site-header" id="siteHeader">
     <a class="brand" href="#top">TomCo</a>
@@ -29,7 +32,10 @@
       <a href="#gallery">Gallery</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a href="#" class="snipcart-checkout cart-link">Cart (<span class="snipcart-items-count">0</span>)</a>
+      <button type="button" class="cart-link" id="cartOpen"
+        aria-haspopup="dialog" aria-controls="cartDrawer" aria-expanded="false">
+        Cart (<span class="snipcart-items-count">0</span>)
+      </button>
     </nav>
   </header>
 
@@ -130,14 +136,14 @@
           <img src="/private-test-online/assets/img/products/sunrise-print.jpg" alt="Sunrise Print" />
           <h3>Sunrise Print</h3>
         </a>
-        <p class="price">$25.00</p>
+        <p class="price">$250.00</p>
         <button class="btn snipcart-add-item"
         data-item-id="print-001"
         data-item-name="Sunrise Print"
-        data-item-price="25.00"
+        data-item-price="250.00"
         data-item-url="/private-test-online/products/sunrise-print.html"
         data-item-image="/private-test-online/assets/img/products/sunrise-print.jpg"
-        data-item-description="A short description of this product. Replace with real copy once the item is photographed and listed.">
+        data-item-description="Limited edition of 50, numbered and signed. Hand-pulled on heavyweight archival stock with pigment inks rated 70+ years. Ships flat and frame-ready.">
         Add to cart
       </button>
       </article>
@@ -242,20 +248,34 @@
       </div>
     </section>
 
-    <!-- 5. FEATURED (dark ink offer strip) --------------------------- -->
+    <!-- 5. FEATURED (cream 2-col: image + content + craft pillars) --- -->
     <section class="home-featured">
-      <svg class="sprig" style="right:3.5rem;bottom:3rem;width:70px;height:130px;transform:scaleX(-1);" viewBox="0 0 56 110" fill="none" aria-hidden="true">
-        <path d="M28 108 Q26 68 18 35" stroke="#F4EDE0" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M18 35 Q2 22 12 5" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M22 60 Q42 48 36 28" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M20 82 Q4 70 8 50" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
-      </svg>
-      <h2 class="featured-heading reveal">
-        Wake your walls up — <em>limited run</em>, numbered and signed.
-      </h2>
-      <div class="featured-aside reveal rd2">
-        <p>The Sunrise Print has its own story to tell.</p>
-        <a href="/private-test-online/offer.html" class="featured-cta">See the Sunrise Print</a>
+      <div class="featured-image reveal">
+        <img src="/private-test-online/assets/img/products/sunrise-print.jpg" alt="The Sunrise Print" loading="lazy" />
+      </div>
+      <div class="featured-content">
+        <span class="featured-eyebrow reveal">Limited edition</span>
+        <h2 class="featured-heading reveal rd1">
+          Wake your walls up — <em>numbered and signed.</em>
+        </h2>
+        <p class="featured-sub reveal rd2">
+          The Sunrise Print has its own story to tell. Edition of 50 — archival inks, hand-finished, $250.
+        </p>
+        <a href="/private-test-online/offer.html" class="featured-cta reveal rd3">See the Sunrise Print</a>
+        <div class="featured-craft reveal rd4">
+          <div class="craft-item">
+            <span class="craft-item-label">Hand-pulled</span>
+            <p>Made manually — no digital press runs, no shortcuts.</p>
+          </div>
+          <div class="craft-item">
+            <span class="craft-item-label">Archival inks</span>
+            <p>Pigments rated 70+ years. Made to outlast the walls.</p>
+          </div>
+          <div class="craft-item">
+            <span class="craft-item-label">Editions of 50</span>
+            <p>Numbered and signed. Once sold, the edition closes.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -319,6 +339,23 @@
       </form>
     </section>
 
+    <!-- NEWSLETTER STRIP --------------------------------------------- -->
+    <div class="foot-newsletter">
+      <div>
+        <h2 class="newsletter-heading reveal">New editions, first.</h2>
+        <p class="newsletter-sub reveal rd1">
+          Occasional dispatches — new prints, studio notes, and early access for subscribers.
+        </p>
+      </div>
+      <div class="reveal rd1">
+        <form onsubmit="return false;" class="newsletter-form">
+          <input class="newsletter-input" type="email" placeholder="hello@example.com" aria-label="Email address" />
+          <button class="newsletter-btn" type="submit">Subscribe →</button>
+        </form>
+        <p class="newsletter-note">No frequency commitment. Unsubscribe at any time.</p>
+      </div>
+    </div>
+
     <!-- FOOTER ------------------------------------------------------- -->
     <footer class="home-footer">
       <div class="footer-cols">
@@ -358,6 +395,65 @@
     </footer>
 
   </main>
+
+  <!-- CART DRAWER (mockup contents — Checkout opens real Snipcart) --- -->
+  <div class="cart-backdrop" id="cartBackdrop" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" tabindex="-1">
+    <div class="cart-drawer-head">
+      <div>
+        <span class="cart-drawer-title" id="cartDrawerTitle">Cart</span>
+        <span class="cart-drawer-count"><span class="snipcart-items-count">0</span> items</span>
+      </div>
+      <button class="cart-drawer-close" id="cartClose" type="button" aria-label="Close cart">✕</button>
+    </div>
+    <div class="cart-drawer-body" id="cartBody">
+      <!-- Static preview rows; real cart contents live in Snipcart's modal,
+           opened via the Checkout button below. -->
+      <div class="cart-item">
+        <div class="cart-item-thumb">
+          <img src="/private-test-online/assets/img/products/sunrise-print.jpg" alt="" />
+        </div>
+        <div>
+          <div class="cart-item-name">Sunrise Print</div>
+          <div class="cart-item-meta">
+            <span>Edition of 50</span>
+            <span class="cart-item-qty">
+              <button type="button" aria-label="Decrease">−</button>
+              <span>1</span>
+              <button type="button" aria-label="Increase">+</button>
+            </span>
+          </div>
+        </div>
+        <div class="cart-item-price">$250.00</div>
+      </div>
+      <div class="cart-item">
+        <div class="cart-item-thumb">
+          <img src="/private-test-online/assets/img/products/harbor-print.jpg" alt="" />
+        </div>
+        <div>
+          <div class="cart-item-name">Harbor Print</div>
+          <div class="cart-item-meta">
+            <span>8 × 10</span>
+            <span class="cart-item-qty">
+              <button type="button" aria-label="Decrease">−</button>
+              <span>1</span>
+              <button type="button" aria-label="Increase">+</button>
+            </span>
+          </div>
+        </div>
+        <div class="cart-item-price">$30.00</div>
+      </div>
+    </div>
+    <div class="cart-drawer-foot">
+      <div class="cart-subtotal-row">
+        <span class="cart-subtotal-label">Subtotal</span>
+        <span class="cart-subtotal-value">$280.00</span>
+      </div>
+      <p class="cart-shipping-note">Qualifies for free shipping.</p>
+      <button class="cart-checkout-btn snipcart-checkout" type="button">Checkout</button>
+      <button class="cart-continue" id="cartContinue" type="button">Continue shopping</button>
+    </div>
+  </aside>
 
   <script src="/private-test-online/script.js"></script>
   <script src="/private-test-online/home.js"></script>

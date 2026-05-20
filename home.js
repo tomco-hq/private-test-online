@@ -23,6 +23,8 @@
     document.querySelectorAll(".reveal")
   );
   var header = document.getElementById("siteHeader");
+  var stripEl = document.querySelector(".shipping-strip");
+  var stripH = (stripEl && stripEl.offsetHeight) || 28;
 
   if (reduceMotion) {
     revealEls.forEach(function (el) {
@@ -44,8 +46,42 @@
 
     if (header) {
       header.classList.toggle("scrolled", window.pageYOffset > 8);
+      header.classList.toggle("scrolled-past-strip", window.pageYOffset > stripH);
     }
   }
+
+  // --- Cart drawer ---------------------------------------------------
+  var drawer = document.getElementById("cartDrawer");
+  var backdrop = document.getElementById("cartBackdrop");
+  var openBtn = document.getElementById("cartOpen");
+  var closeBtn = document.getElementById("cartClose");
+  var continueBtn = document.getElementById("cartContinue");
+  var lastFocus = null;
+
+  function openCart() {
+    if (!drawer) return;
+    lastFocus = document.activeElement;
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+    openBtn.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+    setTimeout(function () { closeBtn && closeBtn.focus(); }, 50);
+  }
+  function closeCart() {
+    if (!drawer) return;
+    drawer.classList.remove("open");
+    backdrop.classList.remove("open");
+    openBtn.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+  if (openBtn) openBtn.addEventListener("click", openCart);
+  if (closeBtn) closeBtn.addEventListener("click", closeCart);
+  if (backdrop) backdrop.addEventListener("click", closeCart);
+  if (continueBtn) continueBtn.addEventListener("click", closeCart);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && drawer && drawer.classList.contains("open")) closeCart();
+  });
 
   // Time-based throttle (no requestAnimationFrame: rAF callbacks don't run
   // in non-painting contexts, which would freeze scroll updates there).
