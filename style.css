@@ -1,114 +1,254 @@
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+/* style.css — base tokens, typography, and shared components for TomCo.
+   Editorial palette + Fraunces (italic display) + Inter (uppercase micro).
+   home.css and offer.css build on these tokens. */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500&display=swap");
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; }
 
 :root {
-  --bg: #ffffff;
-  --fg: #1a1a1a;
-  --muted: #5a5a5a;
-  --accent: #0366d6;
-  --border: #e5e5e5;
-}
+  --cream:  #F4EDE0;
+  --sage:   #5D7A5E;
+  --terra:  #9B5A44;
+  --ochre:  #9A6E1D;
+  --teal:   #5B7B7A;
+  --rust:   #8A3A2A;
+  --ink:    #2A2530;
+  --serif:  "Fraunces", Georgia, serif;
+  --sans:   "Inter", system-ui, sans-serif;
+  --rule:   rgba(42, 37, 48, 0.16);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1117;
-    --fg: #e6edf3;
-    --muted: #9da7b3;
-    --accent: #58a6ff;
-    --border: #30363d;
-  }
+  /* Legacy tokens kept for any older selectors still referencing them. */
+  --bg: var(--cream);
+  --fg: var(--ink);
+  --muted: rgba(42, 37, 48, 0.55);
+  --accent: var(--terra);
+  --border: var(--rule);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               Helvetica, Arial, sans-serif;
-  line-height: 1.6;
-  color: var(--fg);
-  background: var(--bg);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.65;
 }
 
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 3rem 1.25rem;
+/* --- Typography ---------------------------------------------------- */
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.1;
+}
+h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
+h2 { font-size: clamp(1.75rem, 3.5vw, 2.75rem); }
+h3 { font-size: 1.2rem; }
+
+a { color: var(--ink); text-decoration: none; transition: opacity 0.2s; }
+a:hover { opacity: 0.7; }
+
+/* Uppercase letterspaced micro-label used in eyebrows, captions, etc. */
+.micro {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 400;
 }
 
-.nav { display: flex; gap: 1rem; margin-bottom: 2rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-.nav a { font-weight: 500; }
-.nav a[aria-current="page"] { color: var(--fg); text-decoration: underline; }
-
-header { margin-bottom: 2rem; }
-h1 { font-size: 2.25rem; margin: 0 0 0.25rem; }
-.tagline { color: var(--muted); margin: 0; }
-h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-code { background: var(--border); padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em; }
-footer { margin-top: 3rem; color: var(--muted); font-size: 0.9rem; }
-footer p { margin: 0.25rem 0; }
-.footer-links { margin-bottom: 0.5rem; }
 ul { padding-left: 1.25rem; }
 
-/* --- Navigation extras --------------------------------------------- */
-.nav { flex-wrap: wrap; }
+/* --- Generic container (shop/gallery/legal hand-built pages) -------- */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6rem 3.5rem 4rem;
+}
+
+/* --- Top nav (used on shop / gallery / product / legal pages) ------- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2.75rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px dashed var(--rule);
+  flex-wrap: wrap;
+}
+.nav a {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.45;
+}
+.nav a:hover, .nav a[aria-current="page"] { opacity: 1; text-decoration: none; }
 .cart-link { margin-left: auto; }
+
+/* Page header on hand-built pages */
+header { margin-bottom: 3rem; }
+header h1 { margin-bottom: 0.5rem; }
+.tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: 0.55;
+}
 
 /* --- Buttons ------------------------------------------------------- */
 .btn {
-  display: inline-block;
-  padding: 0.55rem 1.1rem;
-  background: var(--accent);
-  color: #fff;
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--ink);
+  background: transparent;
+  border: 1px dashed var(--rule);
+  padding: 0.85rem 1.6rem;
   cursor: pointer;
   text-decoration: none;
+  transition: background 0.25s, color 0.25s, border 0.25s;
 }
-.btn:hover { opacity: 0.9; text-decoration: none; }
-.btn-secondary {
-  background: transparent;
-  color: var(--accent);
+.btn:hover {
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid var(--ink);
+  opacity: 1;
+}
+.btn-cta {
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid var(--ink);
+}
+.btn-cta:hover {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: var(--cream);
 }
 .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
 
-/* --- Shop grid ----------------------------------------------------- */
+/* --- Shop grid (shop.html, product cards site-wide) ---------------- */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px dashed var(--rule);
 }
-.product-card { display: flex; flex-direction: column; gap: 0.4rem; }
+.product-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #ede5d4;
+  border-right: 1px dashed var(--rule);
+  border-bottom: 1px dashed var(--rule);
+  display: block;
+}
+.product-card:nth-child(3n) { border-right: none; }
+.product-card > a { display: block; height: 100%; }
 .product-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 100%;
   object-fit: cover;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  display: block;
+  transition: transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.product-card h3 { margin: 0.4rem 0 0; font-size: 1rem; }
-.product-card .price { margin: 0; color: var(--muted); }
+.product-card:hover img { transform: scale(1.05); }
+.product-card h3 {
+  position: absolute;
+  bottom: 3rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  color: var(--cream);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  font-weight: 300;
+  z-index: 2;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+.product-card .price {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  opacity: 0.7;
+  z-index: 2;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+/* Gradient caption layer */
+.product-card::before {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(42, 37, 48, 0.72) 0%, transparent 100%);
+  z-index: 1;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+.product-card:hover::before,
+.product-card:hover h3,
+.product-card:hover .price { opacity: 0; }
+/* Hover overlay: the Snipcart button itself fills the card, dark scrim,
+   centered "Add to cart" text. Product name+price are visible in resting
+   state via .product-card h3 + .price; on hover the dark overlay covers
+   them so we don't duplicate. */
+.product-card .btn {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(42, 37, 48, 0.90);
+  color: var(--cream);
+  border: none;
+  border-radius: 0;
+  opacity: 0;
+  transition: opacity 0.35s;
+  font-size: 0.62rem;
+  letter-spacing: 0.26em;
+}
+.product-card:hover .btn { opacity: 1; }
 
-/* --- Product detail ------------------------------------------------ */
+/* --- Product detail page ------------------------------------------ */
 .product-detail-img {
   width: 100%;
-  max-width: 420px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  max-width: 560px;
+  border: 1px dashed var(--rule);
+  display: block;
 }
 
-/* --- Gallery ------------------------------------------------------- */
+/* --- Gallery grid (gallery.html) ----------------------------------- */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0;
+  border: 1px dashed var(--rule);
 }
 .gallery-grid img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 8px;
+  display: block;
+  filter: saturate(0.85);
+  border-right: 1px dashed var(--rule);
+  border-bottom: 1px dashed var(--rule);
 }
 
 /* --- Video embed --------------------------------------------------- */
@@ -116,6 +256,7 @@ ul { padding-left: 1.25rem; }
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
+  border: 1px dashed var(--rule);
 }
 .video-embed iframe {
   position: absolute;
@@ -123,18 +264,63 @@ ul { padding-left: 1.25rem; }
   width: 100%;
   height: 100%;
   border: 0;
-  border-radius: 8px;
 }
 
-/* --- Contact form -------------------------------------------------- */
-.contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 420px; }
-.contact-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.9rem; }
+/* --- Contact form (used on home + standalone pages) ---------------- */
+.contact-form { display: flex; flex-direction: column; gap: 1.5rem; max-width: 480px; }
+.contact-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.56rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.38;
+}
 .contact-form input,
 .contact-form textarea {
-  padding: 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--fg);
-  font: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--rule);
+  padding: 0.6rem 0;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.25s;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-bottom: 1px solid var(--terra);
+}
+.contact-form textarea { min-height: 100px; resize: vertical; }
+
+/* --- Footer on hand-built pages ------------------------------------ */
+footer {
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+footer p { margin: 0.4rem 0; }
+.footer-links a { margin-right: 0.5rem; }
+
+/* --- Mobile -------------------------------------------------------- */
+@media (max-width: 720px) {
+  .container { padding: 5rem 1.25rem 3rem; }
+  .nav { gap: 1.2rem; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-card:nth-child(3n) { border-right: 1px dashed var(--rule); }
+  .product-card:nth-child(2n) { border-right: none; }
+}
+@media (max-width: 480px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card { border-right: none; aspect-ratio: 4 / 3; }
+  .product-card:nth-child(2n) { border-right: none; }
 }

@@ -69,6 +69,13 @@ STATIC_PAGES = [
 # Markers in index.html between which the featured grid is regenerated.
 FEATURED_START = "<!-- BUILD:FEATURED"
 FEATURED_END = "<!-- /BUILD:FEATURED -->"
+FILMSTRIP_START = "<!-- BUILD:FILMSTRIP"
+FILMSTRIP_END = "<!-- /BUILD:FILMSTRIP -->"
+TICKER_START = "<!-- BUILD:TICKER"
+TICKER_END = "<!-- /BUILD:TICKER -->"
+
+# Hero filmstrip on the homepage shows the first N featured products.
+FILMSTRIP_LIMIT = 4
 
 # Max featured products shown on the homepage, in products.json order.
 FEATURED_LIMIT = 6
@@ -287,6 +294,45 @@ def render_shop_page(products, store):
     )
 
 
+def render_filmstrip(products):
+    """Return the hero filmstrip HTML (4 thumbs linking to product pages)."""
+    featured = [p for p in products if p.get("featured")][:FILMSTRIP_LIMIT]
+    if not featured:
+        return '        <div class="hero-strip"></div>'
+    items = []
+    for p in featured:
+        items.append(
+            '          <div class="hero-strip-item" data-name="%s">\n'
+            '            <a href="/products/%s.html"><img src="/%s" alt="%s" /></a>\n'
+            "          </div>" % (p["name"], p["slug"], p["image"], p["name"])
+        )
+    return (
+        '        <div class="hero-strip reveal rd3">\n'
+        + "\n".join(items)
+        + "\n        </div>"
+    )
+
+
+def render_ticker(products):
+    """Return the product-name ticker HTML, doubled so the loop is seamless."""
+    names = [p["name"] for p in products if p.get("featured")]
+    if not names:
+        names = [p["name"] for p in products[:6]]
+    if not names:
+        return '    <div class="ticker"><div class="ticker-track"></div></div>'
+    # Double the list so the keyframe translateX(-50%) loops seamlessly.
+    doubled = names + names
+    items = []
+    for n in doubled:
+        items.append('        <span class="ticker-item">%s</span>' % n)
+        items.append('        <span class="ticker-sep">·</span>')
+    return (
+        '    <div class="ticker">\n'
+        '      <div class="ticker-track">\n' + "\n".join(items) + "\n      </div>\n"
+        "    </div>"
+    )
+
+
 def render_featured(products):
     """Return the featured-products grid HTML for the homepage.
 
@@ -455,6 +501,53 @@ def update_featured(path, products, required=True):
     print("updated %s featured grid (%d item(s))" % (os.path.basename(path), shown))
 
 
+def _update_region(
+    path, start_marker, end_marker, rendered, label, trail_indent="    "
+):
+    """Generic in-place rewrite between two HTML-comment build markers."""
+    if not os.path.exists(path):
+        return
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    start = text.find(start_marker)
+    end = text.find(end_marker)
+    if start == -1 or end == -1:
+        return
+    open_close = text.index("-->", start) + len("-->")
+    new_text = text[:open_close] + "\n" + rendered + "\n" + trail_indent + text[end:]
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write(new_text)
+    print("updated %s %s" % (os.path.basename(path), label))
+
+
+def update_filmstrip(path, products):
+    """Rewrite the BUILD:FILMSTRIP region of the homepage in place."""
+    _update_region(
+        path,
+        FILMSTRIP_START,
+        FILMSTRIP_END,
+        render_filmstrip(products),
+        "filmstrip (%d item(s))"
+        % min(
+            len([p for p in products if p.get("featured")]),
+            FILMSTRIP_LIMIT,
+        ),
+        trail_indent="        ",
+    )
+
+
+def update_ticker(path, products):
+    """Rewrite the BUILD:TICKER region of the homepage in place."""
+    _update_region(
+        path,
+        TICKER_START,
+        TICKER_END,
+        render_ticker(products),
+        "ticker",
+        trail_indent="    ",
+    )
+
+
 def write_sitemap(products, store):
     """Write sitemap.xml listing every static page and product page."""
     domain = store["domain"].rstrip("/")
@@ -505,6 +598,8 @@ def main():
     print("wrote shop.html")
 
     update_featured(INDEX_FILE, products)
+    update_filmstrip(INDEX_FILE, products)
+    update_ticker(INDEX_FILE, products)
     update_offer(products)
     write_sitemap(products, store)
     write_robots(store)

@@ -7,6 +7,8 @@
   <meta name="description" content="TomCo: handmade goods and original work. Browse the shop, view the gallery, and get in touch — all on one page." />
   <link rel="icon" href="/private-test-online/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/private-test-online/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="/private-test-online/style.css" />
   <link rel="stylesheet" href="/private-test-online/home.css" />
 
@@ -33,24 +35,93 @@
 
   <main id="top">
 
-    <!-- 1. HERO ------------------------------------------------------- -->
+    <!-- 1. HERO (filmstrip) ------------------------------------------ -->
     <section class="home-hero">
-      <div class="home-hero-inner">
-        <h1>TomCo</h1>
-        <p class="tagline">Handmade goods and original work.</p>
-        <p class="home-hero-lede">
-          A small studio of prints and hand-finished pieces. Browse the
-          shop, see the gallery, and say hello — it's all just below.
-        </p>
-        <a class="btn btn-cta" href="#products">Browse the shop</a>
+      <svg class="sprig" style="right:3rem;top:5.5rem;width:56px;height:110px;" viewBox="0 0 56 110" fill="none" aria-hidden="true">
+        <path d="M28 108 Q26 68 18 35" stroke="#2A2530" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 35 Q2 22 12 5" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M22 60 Q42 48 36 28" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M20 82 Q4 70 8 50" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <svg class="sprig" style="left:3rem;bottom:4rem;width:44px;height:88px;transform:scaleX(-1);" viewBox="0 0 56 110" fill="none" aria-hidden="true">
+        <path d="M28 108 Q26 68 18 35" stroke="#2A2530" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 35 Q2 22 12 5" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M22 60 Q42 48 36 28" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+
+      <span class="hero-edition reveal">Edition One &nbsp;·&nbsp; Spring 2026</span>
+
+      <div class="hero-body">
+        <span class="hero-eyebrow reveal rd1">Handmade goods &amp; original work.</span>
+        <h1 class="hero-title reveal rd2">Tom<span class="roman">Co</span></h1>
+
+        <!-- BUILD:FILMSTRIP -- 4 hero filmstrip thumbs generated from products.json -->
+        <div class="hero-strip reveal rd3">
+          <div class="hero-strip-item" data-name="Sunrise Print">
+            <a href="/private-test-online/products/sunrise-print.html"><img src="/private-test-online/assets/img/products/sunrise-print.jpg" alt="Sunrise Print" /></a>
+          </div>
+          <div class="hero-strip-item" data-name="Harbor Print">
+            <a href="/private-test-online/products/harbor-print.html"><img src="/private-test-online/assets/img/products/harbor-print.jpg" alt="Harbor Print" /></a>
+          </div>
+          <div class="hero-strip-item" data-name="Meadow Print">
+            <a href="/private-test-online/products/meadow-print.html"><img src="/private-test-online/assets/img/products/meadow-print.jpg" alt="Meadow Print" /></a>
+          </div>
+          <div class="hero-strip-item" data-name="City Lights Print">
+            <a href="/private-test-online/products/city-lights-print.html"><img src="/private-test-online/assets/img/products/city-lights-print.jpg" alt="City Lights Print" /></a>
+          </div>
+        </div>
+        <!-- /BUILD:FILMSTRIP -->
+
+        <hr class="hero-divider reveal rd4" />
+        <div class="hero-foot reveal rd4">
+          <div></div>
+          <p class="hero-desc">A small studio of prints and hand-finished pieces — made in small runs.</p>
+          <a href="#products" class="hero-scroll">Browse the shop</a>
+        </div>
       </div>
-      <div class="scroll-cue" aria-hidden="true">&darr;</div>
     </section>
 
-    <!-- 2. PRODUCTS --------------------------------------------------- -->
-    <section class="home-block reveal" id="products">
-      <h2>Shop</h2>
-      <p class="home-block-intro">A few favourites — every piece is made in small runs.</p>
+    <!-- 2. TICKER ---------------------------------------------------- -->
+    <!-- BUILD:TICKER -- product-name marquee generated from products.json -->
+    <div class="ticker">
+      <div class="ticker-track">
+        <span class="ticker-item">Sunrise Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Harbor Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Meadow Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">City Lights Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Forest Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Desert Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Sunrise Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Harbor Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Meadow Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">City Lights Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Forest Print</span>
+        <span class="ticker-sep">·</span>
+        <span class="ticker-item">Desert Print</span>
+        <span class="ticker-sep">·</span>
+      </div>
+    </div>
+    <!-- /BUILD:TICKER -->
+
+    <!-- 3. SHOP (I.) ------------------------------------------------- -->
+    <section class="home-block" id="products">
+      <div class="home-block-header">
+        <div>
+          <span class="section-numeral reveal">I. Shop</span>
+          <h2 class="section-heading reveal rd1">A few favourites.</h2>
+        </div>
+        <a href="/private-test-online/shop.html" class="see-all reveal rd2">Full shop</a>
+      </div>
       <!-- BUILD:FEATURED -- content between these markers is generated by
            build.py from products.json. Do not edit by hand. -->
       <div class="product-grid">
@@ -152,52 +223,86 @@
       </article>
       </div>
       <!-- /BUILD:FEATURED -->
-      <p class="home-section-link"><a href="/private-test-online/shop.html">See the full shop &rarr;</a></p>
     </section>
 
-    <!-- 3. GALLERY TEASER --------------------------------------------- -->
-    <section class="home-block accent-strip reveal" id="gallery">
-      <h2>Gallery</h2>
-      <p class="home-block-intro">A look at the work — finished pieces and works in progress.</p>
-      <div class="gallery-strip">
-        <img src="/private-test-online/assets/img/gallery/gallery-01.jpg" alt="Gallery item 1" loading="lazy" />
-        <img src="/private-test-online/assets/img/gallery/gallery-02.jpg" alt="Gallery item 2" loading="lazy" />
-        <img src="/private-test-online/assets/img/gallery/gallery-03.jpg" alt="Gallery item 3" loading="lazy" />
-        <img src="/private-test-online/assets/img/gallery/gallery-04.jpg" alt="Gallery item 4" loading="lazy" />
+    <!-- 4. GALLERY (II., sage section) ------------------------------- -->
+    <section class="home-gallery" id="gallery">
+      <div class="home-block-header">
+        <div>
+          <span class="section-numeral reveal">II. Gallery</span>
+          <h2 class="section-heading reveal rd1">Finished pieces &amp; works in progress.</h2>
+        </div>
+        <a href="/private-test-online/gallery.html" class="see-all reveal rd2">Full gallery</a>
       </div>
-      <p class="home-section-link"><a href="/private-test-online/gallery.html">See the full gallery &rarr;</a></p>
+      <div class="home-gallery-grid reveal">
+        <a href="/private-test-online/gallery.html"><img src="/private-test-online/assets/img/gallery/gallery-01.jpg" alt="Gallery item 1" loading="lazy" /></a>
+        <a href="/private-test-online/gallery.html"><img src="/private-test-online/assets/img/gallery/gallery-02.jpg" alt="Gallery item 2" loading="lazy" /></a>
+        <a href="/private-test-online/gallery.html"><img src="/private-test-online/assets/img/gallery/gallery-03.jpg" alt="Gallery item 3" loading="lazy" /></a>
+        <a href="/private-test-online/gallery.html"><img src="/private-test-online/assets/img/gallery/gallery-04.jpg" alt="Gallery item 4" loading="lazy" /></a>
+      </div>
     </section>
 
-    <!-- 4. ABOUT ------------------------------------------------------ -->
-    <section class="home-block reveal" id="about">
-      <h2>About</h2>
-      <p>
-        Placeholder copy. Replace this with your story — what you make,
-        why you make it, and what a customer can expect.
-      </p>
-      <div class="video-embed">
+    <!-- 5. FEATURED (dark ink offer strip) --------------------------- -->
+    <section class="home-featured">
+      <svg class="sprig" style="right:3.5rem;bottom:3rem;width:70px;height:130px;transform:scaleX(-1);" viewBox="0 0 56 110" fill="none" aria-hidden="true">
+        <path d="M28 108 Q26 68 18 35" stroke="#F4EDE0" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 35 Q2 22 12 5" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M22 60 Q42 48 36 28" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M20 82 Q4 70 8 50" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <h2 class="featured-heading reveal">
+        Wake your walls up — <em>limited run</em>, numbered and signed.
+      </h2>
+      <div class="featured-aside reveal rd2">
+        <p>The Sunrise Print has its own story to tell.</p>
+        <a href="/private-test-online/offer.html" class="featured-cta">See the Sunrise Print</a>
+      </div>
+    </section>
+
+    <!-- 6. ABOUT (III.) ---------------------------------------------- -->
+    <section class="home-about" id="about">
+      <svg class="sprig" style="right:3.5rem;top:4rem;width:50px;height:96px;" viewBox="0 0 56 110" fill="none" aria-hidden="true">
+        <path d="M28 108 Q26 68 18 35" stroke="#2A2530" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 35 Q2 22 12 5" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M22 60 Q42 48 36 28" stroke="#2A2530" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <div class="home-about-body">
+        <span class="section-numeral reveal">III. About</span>
+        <h2 class="section-heading reveal rd1">Made by hand,<br />with intention.</h2>
+        <p class="reveal rd2">
+          TomCo is a small independent studio — prints and hand-finished pieces made in small runs.
+          Every piece is made with care: limited quantities, real materials, real craft.
+        </p>
+        <p class="reveal rd3">
+          Browse the shop, see the gallery, or reach out directly.
+        </p>
+      </div>
+      <div class="home-about-visual reveal rd2">
         <!-- Replace VIDEO_ID with your YouTube video id. -->
-        <iframe
-          src="https://www.youtube.com/embed/VIDEO_ID"
-          title="Intro video"
-          loading="lazy"
-          allowfullscreen></iframe>
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            title="Intro video"
+            loading="lazy"
+            allowfullscreen></iframe>
+        </div>
       </div>
     </section>
 
-    <!-- 5. OFFER STRIP ------------------------------------------------ -->
-    <section class="home-block offer-strip reveal">
-      <h2>Wake your walls up</h2>
-      <p>The Sunrise Print has its own story to tell — limited run, numbered and signed.</p>
-      <a class="btn btn-cta" href="/private-test-online/offer.html">See the Sunrise Print &rarr;</a>
-    </section>
-
-    <!-- 6. CONTACT ---------------------------------------------------- -->
-    <section class="home-block reveal" id="contact">
-      <h2>Contact</h2>
-      <p class="home-block-intro">Questions, custom orders, or just to say hi.</p>
+    <!-- 7. CONTACT (IV.) --------------------------------------------- -->
+    <section class="home-contact" id="contact">
+      <div class="home-contact-info">
+        <span class="section-numeral reveal">IV. Contact</span>
+        <h2 class="section-heading reveal rd1">Questions, custom orders,<br />or simply to say hello.</h2>
+        <p class="reveal rd2">A small studio — so correspondence is answered by a real person.</p>
+        <ul class="elsewhere reveal rd3">
+          <li><a href="https://instagram.com/YOUR_HANDLE">↗ &nbsp; Instagram</a></li>
+          <li><a href="https://youtube.com/@YOUR_CHANNEL">↗ &nbsp; YouTube</a></li>
+          <li><a href="mailto:hello@example.com">↗ &nbsp; hello@example.com</a></li>
+        </ul>
+      </div>
       <!-- Replace YOUR_FORM_ID with your Formspree form id (formspree.io). -->
-      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form class="contact-form reveal rd1" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
         <label>
           Name
           <input type="text" name="name" required />
@@ -212,16 +317,15 @@
         </label>
         <button class="btn" type="submit">Send</button>
       </form>
-      <ul class="elsewhere">
-        <li><a href="https://instagram.com/YOUR_HANDLE">Instagram</a></li>
-        <li><a href="https://youtube.com/@YOUR_CHANNEL">YouTube</a></li>
-        <li><a href="mailto:hello@example.com">hello@example.com</a></li>
-      </ul>
     </section>
 
-    <!-- FOOTER -------------------------------------------------------- -->
+    <!-- FOOTER ------------------------------------------------------- -->
     <footer class="home-footer">
       <div class="footer-cols">
+        <div class="footer-col footer-brand">
+          <a href="#top" class="brand">TomCo</a>
+          <p>Handmade goods and original work. A small studio — prints made in small runs.</p>
+        </div>
         <div class="footer-col">
           <h4>Shop</h4>
           <ul>
@@ -241,21 +345,16 @@
         <div class="footer-col">
           <h4>Help</h4>
           <ul>
-            <li><a href="/private-test-online/refund.html">Refund Policy</a></li>
+            <li><a href="/private-test-online/refund.html">Refund policy</a></li>
             <li><a href="/private-test-online/privacy.html">Privacy</a></li>
             <li><a href="/private-test-online/terms.html">Terms</a></li>
           </ul>
         </div>
-        <div class="footer-col">
-          <h4>Connect</h4>
-          <ul>
-            <li><a href="https://instagram.com/YOUR_HANDLE">Instagram</a></li>
-            <li><a href="https://youtube.com/@YOUR_CHANNEL">YouTube</a></li>
-            <li><a href="mailto:hello@example.com">Email</a></li>
-          </ul>
-        </div>
       </div>
-      <p class="footer-copy">&copy; <span id="year"></span> TomCo</p>
+      <div class="footer-copy">
+        <span>&copy; <span id="year"></span> TomCo</span>
+        <span>Edition One &nbsp;·&nbsp; Spring 2026</span>
+      </div>
     </footer>
 
   </main>
