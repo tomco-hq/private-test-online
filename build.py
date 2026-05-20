@@ -22,6 +22,7 @@ Re-run this every time ``products.json`` changes, then commit and push.
 
 import json
 import os
+import re
 
 # --- Paths ----------------------------------------------------------------
 
@@ -33,6 +34,24 @@ INDEX_FILE = os.path.join(BASE_DIR, "index.html")
 OFFER_FILE = os.path.join(BASE_DIR, "offer.html")
 SITEMAP_FILE = os.path.join(BASE_DIR, "sitemap.xml")
 ROBOTS_FILE = os.path.join(BASE_DIR, "robots.txt")
+STATE_FILE = os.path.join(BASE_DIR, ".build_state.json")
+
+# --- Deploy base path -----------------------------------------------------
+#
+# When the site is hosted under a subpath (e.g. GitHub Pages project site at
+# https://tomco-hq.github.io/private-test-online/), every root-absolute path
+# in the source (`/style.css`, `/shop.html`, `/#about`, ...) resolves against
+# the host root and 404s or pulls stale files. BASE_PATH tells build.py to
+# rewrite those paths in-place after the rest of the build runs.
+#
+#   BASE_PATH = ""                       -> local preview + user-site deploy
+#   BASE_PATH = "/private-test-online"   -> project-site deploy
+#
+# Override per-run with the TOMCO_BASE_PATH env var. Rewriting is idempotent
+# across BASE_PATH changes -- the previous value is stored in .build_state.json
+# and stripped before the new value is applied, so flipping is safe.
+BASE_PATH = os.environ.get("TOMCO_BASE_PATH", "/private-test-online").rstrip("/")
+SITE_HOST = "https://tomco-hq.github.io"
 
 # Crawlable static pages, as root-relative paths. The 404 page is
 # intentionally excluded from the sitemap.
@@ -493,5 +512,109 @@ def main():
     print("done -- %d product(s)" % len(products))
 
 
+# --- Base-path rewriting --------------------------------------------------
+
+
+def _files_to_rewrite():
+    """Yield absolute paths of every file that may contain site-internal URLs."""
+    for name in sorted(os.listdir(BASE_DIR)):
+        full = os.path.join(BASE_DIR, name)
+        if os.path.isfile(full) and name.endswith(".html"):
+            yield full
+    if os.path.isdir(PRODUCTS_DIR):
+        for name in sorted(os.listdir(PRODUCTS_DIR)):
+            if name.endswith(".html"):
+                yield os.path.join(PRODUCTS_DIR, name)
+    for extra in (SITEMAP_FILE, ROBOTS_FILE):
+        if os.path.exists(extra):
+            yield extra
+
+
+# Patterns of where a leading "/" path appears in our site's source. Each
+# pattern has a capture group for the "carrier" (the chars right before the
+# path, e.g. `href="`) and matches the path itself.
+_PATH_CARRIERS = [
+    # href / src / action / form attrs / snipcart data-item-* URLs.
+    r'((?:href|src|action|data-item-url|data-item-image)=")',
+    # meta http-equiv refresh: content="0; url=/foo"
+    r'(content="\d+;\s*url=)',
+    # JS: location.replace("/foo"), .href = "/foo", etc.
+    r'(\.replace\(")',
+]
+_HOST_CARRIER = re.escape(SITE_HOST)
+
+
+def _strip_prefix(text, prefix):
+    """Remove ``prefix`` from any site-internal path that currently has it."""
+    if not prefix:
+        return text
+    esc = re.escape(prefix)
+    for carrier in _PATH_CARRIERS:
+        text = re.sub(carrier + esc + r"(/|\"|#)", r"\1\2", text)
+    text = re.sub(_HOST_CARRIER + esc + r"(/|\"|<|'|\s|$)", SITE_HOST + r"\1", text)
+    return text
+
+
+def _apply_prefix(text, prefix):
+    """Insert ``prefix`` in front of every site-internal path."""
+    if not prefix:
+        return text
+    esc = re.escape(prefix.lstrip("/"))
+    # Lookahead skips paths already prefixed, so this stays idempotent.
+    for carrier in _PATH_CARRIERS:
+        text = re.sub(
+            carrier + r"(/(?!" + esc + r"/)(?:#|[^\"]*))",
+            r"\1" + prefix + r"\2",
+            text,
+        )
+    text = re.sub(
+        _HOST_CARRIER + r"(/(?!" + esc + r"/)(?:[^\"'<\s]*))",
+        SITE_HOST + prefix + r"\1",
+        text,
+    )
+    return text
+
+
+def _read_state():
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE, encoding="utf-8") as handle:
+            try:
+                return json.load(handle)
+            except json.JSONDecodeError:
+                return {}
+    return {}
+
+
+def _write_state(state):
+    with open(STATE_FILE, "w", encoding="utf-8") as handle:
+        json.dump(state, handle, indent=2)
+
+
+def apply_base_path():
+    """Rewrite every site-internal URL in the build output to match BASE_PATH.
+
+    Strips any previously applied prefix (recorded in ``.build_state.json``)
+    before re-applying the current one, so changing BASE_PATH and re-running
+    is safe.
+    """
+    state = _read_state()
+    previous = state.get("base_path", "")
+    touched = 0
+    for path in _files_to_rewrite():
+        with open(path, encoding="utf-8") as handle:
+            original = handle.read()
+        rewritten = _strip_prefix(original, previous)
+        rewritten = _apply_prefix(rewritten, BASE_PATH)
+        if rewritten != original:
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write(rewritten)
+            touched += 1
+
+    state["base_path"] = BASE_PATH
+    _write_state(state)
+    print("base path %r -> %r (%d file(s) rewritten)" % (previous, BASE_PATH, touched))
+
+
 if __name__ == "__main__":
     main()
+    apply_base_path()

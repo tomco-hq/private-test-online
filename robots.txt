@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tomco-hq.github.io/sitemap.xml
+Sitemap: https://tomco-hq.github.io/private-test-online/sitemap.xml
