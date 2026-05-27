@@ -64,17 +64,18 @@ a:hover { opacity: 0.7; }
 ul { padding-left: 1.25rem; }
 
 /* --- Generic container (shop/gallery/legal hand-built pages) -------- */
+/* Mobile-first: tight padding by default, roomier on wider viewports. */
 .container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 6rem 3.5rem 4rem;
+  padding: 5rem 1.25rem 3rem;
 }
 
 /* --- Top nav (used on shop / gallery / product / legal pages) ------- */
 .nav {
   display: flex;
   align-items: center;
-  gap: 2.75rem;
+  gap: 1.2rem;
   padding-bottom: 1.5rem;
   margin-bottom: 3rem;
   border-bottom: 1px dashed var(--rule);
@@ -138,21 +139,22 @@ header h1 { margin-bottom: 0.5rem; }
 .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
 
 /* --- Shop grid (shop.html, product cards site-wide) ---------------- */
+/* Mobile-first: single column by default; columns added at min-width
+   breakpoints below. */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   border: 1px dashed var(--rule);
 }
 .product-card {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #ede5d4;
-  border-right: 1px dashed var(--rule);
+  border-right: none;
   border-bottom: 1px dashed var(--rule);
   display: block;
 }
-.product-card:nth-child(3n) { border-right: none; }
 .product-card > a { display: block; height: 100%; }
 .product-card img {
   width: 100%;
@@ -311,16 +313,18 @@ footer {
 footer p { margin: 0.4rem 0; }
 .footer-links a { margin-right: 0.5rem; }
 
-/* --- Mobile -------------------------------------------------------- */
-@media (max-width: 720px) {
-  .container { padding: 5rem 1.25rem 3rem; }
-  .nav { gap: 1.2rem; }
+/* --- Larger screens (mobile-first enhancement) --------------------- */
+/* Small tablet and up: two columns. */
+@media (min-width: 481px) {
   .product-grid { grid-template-columns: repeat(2, 1fr); }
-  .product-card:nth-child(3n) { border-right: 1px dashed var(--rule); }
+  .product-card { aspect-ratio: 3 / 4; border-right: 1px dashed var(--rule); }
   .product-card:nth-child(2n) { border-right: none; }
 }
-@media (max-width: 480px) {
-  .product-grid { grid-template-columns: 1fr; }
-  .product-card { border-right: none; aspect-ratio: 4 / 3; }
-  .product-card:nth-child(2n) { border-right: none; }
+/* Desktop: three columns and full spacing. */
+@media (min-width: 721px) {
+  .container { padding: 6rem 3.5rem 4rem; }
+  .nav { gap: 2.75rem; }
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .product-card:nth-child(2n) { border-right: 1px dashed var(--rule); }
+  .product-card:nth-child(3n) { border-right: none; }
 }
