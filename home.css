@@ -64,6 +64,28 @@
 }
 .cart-link:hover { opacity: 1; }
 
+/* --- Mobile drawer nav (home header) ------------------------------- */
+/* Desktop-first: inline row by default; the anchor-nav collapses into a
+   dropdown panel under the fixed header at 600px and below. */
+.site-header > .nav-toggle { display: none; }
+@media (max-width: 600px) {
+  .site-header > .nav-toggle { display: inline-flex; }
+  .anchor-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+    padding: 1.25rem;
+    background: var(--cream);
+    border-bottom: 1px dashed var(--rule);
+    display: none;
+  }
+  .anchor-nav.is-open { display: flex; }
+}
+
 /* --- Reveal animation --------------------------------------------- */
 .reveal {
   opacity: 0;

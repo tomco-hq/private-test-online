@@ -91,6 +91,42 @@ ul { padding-left: 1.25rem; }
 .nav a:hover, .nav a[aria-current="page"] { opacity: 1; text-decoration: none; }
 .cart-link { margin-left: auto; }
 
+/* --- Mobile drawer nav (hamburger injected by script.js) ----------- */
+/* Shared toggle button — used by the inner .nav and the home .site-header.
+   Hidden by default; each context turns it on at the right breakpoint. */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  background: transparent;
+  border: 1px dashed var(--rule);
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  width: 1.1rem;
+  height: 1px;
+  background: var(--ink);
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-toggle.is-open span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.nav-toggle.is-open span:nth-child(2) { opacity: 0; }
+.nav-toggle.is-open span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+/* Inner .nav — desktop-first: a normal inline bar by default; collapses to a
+   hamburger drawer at 600px and below. */
+@media (max-width: 600px) {
+  .nav > .nav-toggle { display: inline-flex; margin-left: auto; }
+  .nav > a, .nav > .cart-link { display: none; }
+  .nav.is-open { flex-direction: column; align-items: stretch; gap: 1rem; }
+  .nav.is-open > a,
+  .nav.is-open > .cart-link { display: block; margin-left: 0; }
+}
+
 /* Page header on hand-built pages */
 header { margin-bottom: 3rem; }
 header h1 { margin-bottom: 0.5rem; }
@@ -225,6 +261,23 @@ header h1 { margin-bottom: 0.5rem; }
   letter-spacing: 0.26em;
 }
 .product-card:hover .btn { opacity: 1; }
+
+/* Touch devices (no hover): the full-card overlay would never appear, so the
+   grid add-to-cart would be unreachable on phones. Surface a compact,
+   always-visible pill in the top-right corner instead — the rest of the card
+   still taps through to the product page, and the name/price stay visible. */
+@media (hover: none) {
+  .product-card .btn {
+    inset: 0.9rem 0.9rem auto auto;
+    width: auto;
+    opacity: 1;
+    background: var(--ink);
+    border-radius: 2rem;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+  }
+}
 
 /* --- Product detail page ------------------------------------------ */
 .product-detail-img {

@@ -92,3 +92,52 @@ window.SnipcartSettings = {
     t.dataset.configModalStyle = "side";
   }
 })();
+
+// --- Mobile drawer nav ----------------------------------------------------
+//
+// Progressive enhancement: inject a hamburger toggle so the nav collapses
+// into a drawer on narrow screens. No per-page markup is required and the
+// markup is untouched, so v1/v2 stay identical for the CSS A/B — only CSS
+// decides WHEN the toggle shows (v1 max-width, v2 min-width).
+(function () {
+  function setupDrawer(container, menu, placeToggleFirst) {
+    if (!container || !menu || container.querySelector(".nav-toggle")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "nav-toggle";
+    btn.setAttribute("aria-label", "Toggle menu");
+    btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML = "<span></span><span></span><span></span>";
+    if (placeToggleFirst) container.insertBefore(btn, container.firstChild);
+    else container.appendChild(btn);
+
+    function setOpen(open) {
+      menu.classList.toggle("is-open", open);
+      btn.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", String(open));
+    }
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setOpen(!menu.classList.contains("is-open"));
+    });
+    menu.addEventListener("click", function (e) {
+      if (e.target && e.target.closest && e.target.closest("a")) setOpen(false);
+    });
+    document.addEventListener("click", function (e) {
+      if (!container.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setOpen(false);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Inner pages: the .nav bar is its own container + menu.
+    var inner = document.querySelector(".nav");
+    if (inner) setupDrawer(inner, inner, true);
+    // Home: toggle lives in .site-header; the .anchor-nav is the drawer.
+    var header = document.querySelector(".site-header");
+    var anchor = header && header.querySelector(".anchor-nav");
+    if (header && anchor) setupDrawer(header, anchor, false);
+  });
+})();
