@@ -64,6 +64,22 @@
 }
 .cart-link:hover { opacity: 1; }
 
+/* --- Tap targets (touch only) -------------------------------------- */
+/* Match style.css: guarantee ~44px touch targets for the header cart
+   button and the open drawer links without changing the desktop layout. */
+@media (hover: none) {
+  .site-header .cart-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .anchor-nav.is-open a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 /* --- Mobile drawer nav (home header) ------------------------------- */
 /* Desktop-first: inline row by default; the anchor-nav collapses into a
    dropdown panel under the fixed header at 600px and below. */

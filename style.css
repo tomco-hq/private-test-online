@@ -293,6 +293,68 @@ header h1 { margin-bottom: 0.5rem; }
   display: block;
 }
 
+/* --- Sticky add-to-cart bar (product pages, JS-injected) ----------- */
+/* script.js mirrors the in-page Add-to-cart button into this fixed bar,
+   which slides up once the real button scrolls out of view. JS-injected
+   with no markup change, so v1/v2 stay identical for the CSS A/B. */
+.product-sticky-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--cream);
+  border-top: 1px dashed var(--rule);
+  box-shadow: 0 -6px 20px rgba(42, 37, 48, 0.12);
+  transform: translateY(110%);
+  transition: transform 0.3s ease;
+  z-index: 150;
+}
+.product-sticky-cta.is-visible { transform: translateY(0); }
+.product-sticky-cta .sticky-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+.product-sticky-cta .sticky-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-sticky-cta .sticky-price {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.product-sticky-cta .btn { flex-shrink: 0; margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .product-sticky-cta { transition: none; }
+}
+
+/* --- Tap targets (touch only) -------------------------------------- */
+/* WCAG 2.5.5 / iOS HIG target ~44px. Enforced on touch devices only so the
+   desktop visual rhythm is unchanged. Identical in v1 and v2. */
+@media (hover: none) {
+  .nav-toggle { width: 2.75rem; height: 2.75rem; }
+  .btn { min-height: 44px; }
+  .nav.is-open > a,
+  .nav.is-open > .cart-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 /* --- Gallery grid (gallery.html) ----------------------------------- */
 .gallery-grid {
   display: grid;

@@ -141,3 +141,61 @@ window.SnipcartSettings = {
     if (header && anchor) setupDrawer(header, anchor, false);
   });
 })();
+
+// --- Sticky add-to-cart bar (product detail pages) -----------------------
+//
+// Progressive enhancement: on a product page, mirror the in-page "Add to
+// cart" button into a fixed bottom bar that slides up once the real button
+// scrolls out of view. JS-injected with no markup change, so v1/v2 stay
+// identical for the CSS A/B; CSS only styles the bar (shared, identical).
+(function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    var detail = document.querySelector(".product-detail");
+    if (!detail) return;
+    var addBtn = detail.querySelector(".snipcart-add-item");
+    if (!addBtn) return;
+
+    var nameEl = document.querySelector("header h1");
+    var priceEl = document.querySelector("header .tagline");
+
+    var bar = document.createElement("div");
+    bar.className = "product-sticky-cta";
+    bar.setAttribute("aria-hidden", "true");
+
+    var meta = document.createElement("div");
+    meta.className = "sticky-meta";
+    meta.innerHTML =
+      '<span class="sticky-name"></span><span class="sticky-price"></span>';
+    meta.querySelector(".sticky-name").textContent = nameEl
+      ? nameEl.textContent.trim()
+      : "";
+    meta.querySelector(".sticky-price").textContent = priceEl
+      ? priceEl.textContent.trim()
+      : "";
+
+    // Clone the Snipcart button so it carries identical data-item-* attrs;
+    // Snipcart binds by class, so the clone adds to cart like the original.
+    var clone = addBtn.cloneNode(true);
+    clone.removeAttribute("id");
+
+    bar.appendChild(meta);
+    bar.appendChild(clone);
+    document.body.appendChild(bar);
+
+    function show(visible) {
+      bar.classList.toggle("is-visible", visible);
+      bar.setAttribute("aria-hidden", String(!visible));
+    }
+
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          // Show the bar only while the real button is off-screen.
+          show(!entries[0].isIntersecting);
+        },
+        { rootMargin: "0px 0px -10% 0px" },
+      );
+      io.observe(addBtn);
+    }
+  });
+})();
