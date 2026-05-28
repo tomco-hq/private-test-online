@@ -199,3 +199,192 @@ window.SnipcartSettings = {
     }
   });
 })();
+
+// --- Shop controls: search + sort (shop page only) -----------------------
+//
+// Inject a search box + sort dropdown above the product grid on inner pages
+// (shop.html). Skipped on the home page because that grid is the .site-header
+// home layout, not the shop catalog. JS-injected, no markup change.
+(function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    var nav = document.querySelector(".nav"); // inner-page sentinel (home uses .site-header)
+    var grid = document.querySelector(".product-grid");
+    if (!nav || !grid) return;
+
+    var cards = Array.prototype.slice.call(
+      grid.querySelectorAll(".product-card"),
+    );
+    if (cards.length < 2) return;
+
+    var items = cards.map(function (card) {
+      var nameEl = card.querySelector("h3");
+      var priceEl = card.querySelector(".price");
+      var priceText = priceEl
+        ? priceEl.textContent.replace(/[^0-9.]/g, "")
+        : "0";
+      return {
+        card: card,
+        name: nameEl ? nameEl.textContent.trim().toLowerCase() : "",
+        price: parseFloat(priceText) || 0,
+      };
+    });
+
+    var controls = document.createElement("div");
+    controls.className = "shop-controls";
+    controls.innerHTML =
+      '<div class="field">' +
+      '<label for="shop-search">Search</label>' +
+      '<input id="shop-search" type="search" placeholder="Search products" autocomplete="off" />' +
+      "</div>" +
+      '<div class="field">' +
+      '<label for="shop-sort">Sort</label>' +
+      '<select id="shop-sort">' +
+      '<option value="default">Featured</option>' +
+      '<option value="price-asc">Price: low to high</option>' +
+      '<option value="price-desc">Price: high to low</option>' +
+      '<option value="name">Name A&ndash;Z</option>' +
+      "</select>" +
+      "</div>" +
+      '<span class="count" data-shop-count></span>';
+    grid.parentNode.insertBefore(controls, grid);
+
+    var empty = document.createElement("p");
+    empty.className = "shop-empty";
+    empty.hidden = true;
+    empty.textContent = "No products match.";
+    grid.parentNode.insertBefore(empty, grid.nextSibling);
+
+    var searchEl = controls.querySelector("#shop-search");
+    var sortEl = controls.querySelector("#shop-sort");
+    var countEl = controls.querySelector("[data-shop-count]");
+
+    function apply() {
+      var q = searchEl.value.trim().toLowerCase();
+      var s = sortEl.value;
+      var ordered = items.slice();
+      if (s === "price-asc")
+        ordered.sort(function (a, b) { return a.price - b.price; });
+      else if (s === "price-desc")
+        ordered.sort(function (a, b) { return b.price - a.price; });
+      else if (s === "name")
+        ordered.sort(function (a, b) { return a.name.localeCompare(b.name); });
+
+      // Re-attach in the new order (appendChild on existing nodes reorders).
+      ordered.forEach(function (it) { grid.appendChild(it.card); });
+
+      var visible = 0;
+      ordered.forEach(function (it) {
+        var match = !q || it.name.indexOf(q) !== -1;
+        it.card.classList.toggle("is-hidden", !match);
+        if (match) visible++;
+      });
+      countEl.textContent = visible + " of " + items.length;
+      empty.hidden = visible !== 0;
+    }
+
+    searchEl.addEventListener("input", apply);
+    sortEl.addEventListener("change", apply);
+    apply();
+  });
+})();
+
+// --- Quantity selector (product detail pages) ----------------------------
+//
+// Insert a stepper before the Add-to-cart button. Snipcart reads
+// data-item-quantity on click, so we sync the value to every
+// .snipcart-add-item on the page (including the sticky-bar clone).
+(function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    var detail = document.querySelector(".product-detail");
+    if (!detail) return;
+    var addBtn = detail.querySelector(".snipcart-add-item");
+    if (!addBtn) return;
+
+    var wrap = document.createElement("div");
+    wrap.className = "qty-selector";
+    wrap.innerHTML =
+      '<label for="qty-input">Quantity</label>' +
+      '<span class="qty-group">' +
+      '<button type="button" aria-label="Decrease quantity" data-qty="-1">&minus;</button>' +
+      '<input id="qty-input" type="number" inputmode="numeric" min="1" max="99" value="1" />' +
+      '<button type="button" aria-label="Increase quantity" data-qty="1">+</button>' +
+      "</span>";
+    addBtn.parentNode.insertBefore(wrap, addBtn);
+
+    var input = wrap.querySelector("input");
+
+    function syncAll() {
+      var v = Math.max(1, Math.min(99, parseInt(input.value, 10) || 1));
+      input.value = v;
+      // Sync to every Snipcart button (including any sticky-bar clone).
+      var all = document.querySelectorAll(".snipcart-add-item");
+      for (var i = 0; i < all.length; i++)
+        all[i].setAttribute("data-item-quantity", v);
+    }
+
+    wrap.querySelectorAll("button[data-qty]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        input.value =
+          (parseInt(input.value, 10) || 1) +
+          parseInt(b.getAttribute("data-qty"), 10);
+        syncAll();
+      });
+    });
+    input.addEventListener("input", syncAll);
+    input.addEventListener("change", syncAll);
+    syncAll();
+  });
+})();
+
+// --- Image lightbox (product detail pages) -------------------------------
+//
+// Click/keyboard-activate the detail image to view it full-screen. Closes on
+// the close button, outside click, or Escape. Single-image gallery; multi-
+// image support would need products.json to carry an image array.
+(function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    var img = document.querySelector(".product-detail-img");
+    if (!img) return;
+
+    var box = document.createElement("div");
+    box.className = "lightbox";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-hidden", "true");
+    box.innerHTML =
+      '<button type="button" class="lightbox-close" aria-label="Close">✕</button>' +
+      '<img alt="" />';
+    document.body.appendChild(box);
+
+    var bigImg = box.querySelector("img");
+    var closeBtn = box.querySelector(".lightbox-close");
+
+    function open() {
+      bigImg.src = img.currentSrc || img.src;
+      bigImg.alt = img.alt || "";
+      box.classList.add("is-open");
+      box.setAttribute("aria-hidden", "false");
+    }
+    function close() {
+      box.classList.remove("is-open");
+      box.setAttribute("aria-hidden", "true");
+    }
+
+    img.setAttribute("role", "button");
+    img.setAttribute("tabindex", "0");
+    img.addEventListener("click", open);
+    img.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
+    });
+    closeBtn.addEventListener("click", close);
+    box.addEventListener("click", function (e) {
+      if (e.target === box) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && box.classList.contains("is-open")) close();
+    });
+  });
+})();
